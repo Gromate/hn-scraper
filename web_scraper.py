@@ -34,34 +34,35 @@ def extract_news(url):
         cnt += ((str(i+1) + '. ' + tag.text + "\n" + '<br>') if tag.text != 'More' else '')
     return cnt
 
-email = extract_news('https://news.ycombinator.com/')
+if __name__=='__main__':
+    email = extract_news('https://news.ycombinator.com/')
 
-#loading enviromental variables
-load_dotenv()
-SERVER = os.getenv('SERVER')
-PORT = os.getenv('PORT')
-FROM = os.getenv('FROM')
-TO = os.getenv('TO')
-PASSWORD = os.getenv('PASSWORD')
+    #loading enviromental variables
+    load_dotenv()
+    SERVER = os.getenv('SERVER')
+    PORT = os.getenv('PORT')
+    FROM = os.getenv('FROM')
+    TO = os.getenv('TO')
+    PASSWORD = os.getenv('PASSWORD')
 
-msg = MIMEMultipart()
-msg['Subject'] = "Top News HN" + ' ' + str(now.day) + '-' + str(now.month) + '-' + str(now.year)
-msg['From'] = FROM
-msg['TO'] = TO
+    msg = MIMEMultipart()
+    msg['Subject'] = "Top News HN" + ' ' + str(now.day) + '-' + str(now.month) + '-' + str(now.year)
+    msg['From'] = FROM
+    msg['TO'] = TO
 
-msg.attach(MIMEText(email, 'html'))
+    msg.attach(MIMEText(email, 'html'))
 
-print("Initiating server...")
+    print("Initiating server...")
 
-server = smtplib.SMTP(SERVER, PORT)
-#this sets level of verbosity of the server
-server.set_debuglevel(1)
+    server = smtplib.SMTP(SERVER, PORT)
+    #this sets level of verbosity of the server
+    server.set_debuglevel(1)
 
-server.ehlo()
-server.starttls()
-server.login(FROM, PASSWORD)
-server.sendmail(FROM, TO, msg.as_string())
+    server.ehlo()
+    server.starttls()
+    server.login(FROM, PASSWORD)
+    server.sendmail(FROM, TO, msg.as_string())
 
-print("Email sent...")
+    print("Email sent...")
 
-server.quit()
+    server.quit()
